@@ -1,5 +1,6 @@
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import Navbar from './components/Navbar'
+import Login from './components/Login'
 
 function App() {
   return (
@@ -10,7 +11,7 @@ function App() {
         <Switch>
           {/* Route envuelve el componente dinamico, se debe ir de lo mas especifico a lo mas general o agregarle exact */}
           <Route path='/login'>
-            login
+            <Login/>
           </Route>
 
           <Route path='/admin'>
