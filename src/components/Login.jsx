@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from 'react'
-import { auth } from '../firebase'
+import { auth, db } from '../firebase'
 
 const Login = () => {
 
@@ -41,6 +41,14 @@ const Login = () => {
         async () => {
             try {
                 const res = await auth.createUserWithEmailAndPassword(email, pass)
+                // Adding to db collection the user id
+                await db.collection('usuarios').doc(res.user.email).set({
+                    email: res.user.email,
+                    uid: res.user.uid
+                })
+                setEmail('')
+                setPass('')
+                setError('')
                 console.log(res.user)
             } catch (error) {
                 console.log(error)
