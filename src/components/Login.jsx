@@ -6,7 +6,7 @@ const Login = () => {
     const [email, setEmail] = useState('')
     const [pass, setPass] = useState('')
     const [error, setError] = useState(null)
-    const [esRegistro, setEsRegistro] = useState(true)
+    const [esRegistro, setEsRegistro] = useState(false)
 
     const procesarDatos = (e) => {
         e.preventDefault()
@@ -33,9 +33,29 @@ const Login = () => {
 
         if(esRegistro){
             registrar()
+        } else {
+            login()
         }
     }
+    // Login for a registered user
 
+    const login = useCallback(
+        async () => {
+            try {
+                const res = await auth.signInWithEmailAndPassword(email, pass)
+                console.log(res.user)
+            } catch (error) {
+                console.log(error)
+                if (error.code === 'auth/invalid-email')
+                    setError('Email incorrecto')
+                if (error.code === 'auth/wrong-password')
+                    setError('Contraseña incorrecta')
+                if (error.code === 'auth/user-not-found')
+                    setError('No existe el usuario')
+            }
+        },
+        [email,pass],
+    )
     // Create a new account with email and password
     const registrar = useCallback(
         async () => {
@@ -60,7 +80,6 @@ const Login = () => {
         },
         [email, pass],
     )
-
 
     return (
         <div className='mt-5'>
