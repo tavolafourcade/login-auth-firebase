@@ -44,6 +44,9 @@ const Login = () => {
             try {
                 const res = await auth.signInWithEmailAndPassword(email, pass)
                 console.log(res.user)
+                setEmail('')
+                setPass('')
+                setError('')
             } catch (error) {
                 console.log(error)
                 if (error.code === 'auth/invalid-email')
