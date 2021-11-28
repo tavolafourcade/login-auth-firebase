@@ -1,7 +1,8 @@
 import React, {useState, useCallback} from 'react'
 import { auth, db } from '../firebase'
+import { withRouter } from 'react-router-dom'
 
-const Login = () => {
+const Login = (props) => {
 
     const [email, setEmail] = useState('')
     const [pass, setPass] = useState('')
@@ -47,6 +48,7 @@ const Login = () => {
                 setEmail('')
                 setPass('')
                 setError('')
+                props.history.push('/admin')
             } catch (error) {
                 console.log(error)
                 if (error.code === 'auth/invalid-email')
@@ -57,7 +59,7 @@ const Login = () => {
                     setError('No existe el usuario')
             }
         },
-        [email,pass],
+        [email,pass, props.history]
     )
     // Create a new account with email and password
     const registrar = useCallback(
@@ -72,6 +74,7 @@ const Login = () => {
                 setEmail('')
                 setPass('')
                 setError('')
+                props.history.push('/admin')
                 console.log(res.user)
             } catch (error) {
                 console.log(error)
@@ -81,7 +84,7 @@ const Login = () => {
                     setError('Email ya utilizado')
             }
         },
-        [email, pass],
+        [email, pass, props.history]
     )
 
     return (
@@ -131,4 +134,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default withRouter(Login)
