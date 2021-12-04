@@ -23,7 +23,7 @@ function App() {
   return firebaseUser !== false ? (
     <Router>
       <div className="container">
-        <Navbar/>
+        <Navbar firebaseUser={firebaseUser}/>
         {/* Estableciendo los componentes dinamicos */}
         <Switch>
           {/* Route envuelve el componente dinamico, se debe ir de lo mas especifico a lo mas general o agregarle exact */}

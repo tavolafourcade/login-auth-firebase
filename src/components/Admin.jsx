@@ -9,6 +9,7 @@ const Admin = (props) => {
     useEffect(()=>{
         if(auth.currentUser){
             console.log('Existe un usuario')
+            setUser(auth.currentUser)
         } else {
             console.log('No existe el usuario')
             props.history.push('/login')
@@ -18,6 +19,11 @@ const Admin = (props) => {
     return (
         <div>
             <h2>Ruta Protegida</h2>
+            {
+                user && (
+                    <h3>Bienvenido {user.email}</h3>
+                )
+            }
         </div>
     )
 }
