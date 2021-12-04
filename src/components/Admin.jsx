@@ -1,10 +1,11 @@
 import React from 'react'
 import { auth } from '../firebase' 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 
 
 const Admin = (props) => {
+    const [user, setUser] = useState(null)
     useEffect(()=>{
         if(auth.currentUser){
             console.log('Existe un usuario')
