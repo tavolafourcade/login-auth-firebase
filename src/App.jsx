@@ -2,9 +2,25 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Login from './components/Login'
 import Admin from './components/Admin'
+import { auth } from './firebase' 
+import { useState, useEffect } from 'react'
+
 
 function App() {
-  return (
+  const [firebaseUser, setFirebaseUser] = useState(false)
+
+  //Console log if the user exists and setting the user in the State
+  useEffect(() => {
+    auth.onAuthStateChanged(user => {
+      console.log(user)
+      if(user){
+        setFirebaseUser(user)
+      }else{
+        setFirebaseUser(null)
+      }
+    })
+  }, [])
+  return firebaseUser !== false ? (
     <Router>
       <div className="container">
         <Navbar/>
@@ -25,7 +41,9 @@ function App() {
         </Switch>
       </div>
     </Router>
-  );
+  ) : (
+    <p>Cargando...</p>
+  )
 }
 
 export default App;
