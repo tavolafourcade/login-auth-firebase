@@ -1,7 +1,9 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
+import { auth } from '../firebase'
+import { withRouter } from 'react-router-dom'
 
-const Reset = () => {
+const Reset = (props) => {
     const [email, setEmail] = useState('')
     const [error, setError] = useState(null)
 
@@ -14,8 +16,22 @@ const Reset = () => {
         }
 
         setError(null)
+        recuperar()
     }
 
+    const recuperar = useCallback(
+        async () => {
+            try {
+                await auth.sendPasswordResetEmail(email)
+                console.log('correo enviado')
+                props.history.push('/login')
+
+            } catch (error) {
+                setError(error.message)
+            }
+        },
+        [email, props.history],
+    )
 
     return (
         <div className='mt-5'>
@@ -54,4 +70,4 @@ const Reset = () => {
     )
 }
 
-export default Reset
+export default withRouter(Reset)

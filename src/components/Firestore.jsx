@@ -16,7 +16,10 @@ const Firestore = (props) => {
         const obtenerDatos = async () => {
   
         try {
-            const data = await db.collection(props.user.uid).get()
+            const data = await db.collection(props.user.uid)
+            .limit(2)
+            .orderBy('fecha')
+            .get()
           const arrayData = data.docs.map(doc => ({ id: doc.id, ...doc.data() }))
           console.log(arrayData)
           setTareas(arrayData)
