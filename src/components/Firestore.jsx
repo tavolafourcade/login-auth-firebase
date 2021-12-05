@@ -1,5 +1,7 @@
 import React from 'react'
 import {db} from '../firebase'
+import moment from 'moment'
+import 'moment/locale/es'
 
 const Firestore = (props) => {
 
@@ -7,11 +9,11 @@ const Firestore = (props) => {
     const [tarea, setTarea] = React.useState('')
     const [modoEdicion, setModoEdicion] = React.useState(false)
     const [id, setId] = React.useState('')
-  
-  
+
+
     React.useEffect(() => {
   
-      const obtenerDatos = async () => {
+        const obtenerDatos = async () => {
   
         try {
             const data = await db.collection(props.user.uid).get()
@@ -107,7 +109,7 @@ const Firestore = (props) => {
                         {
                         tareas.map(item => (
                             <li className="list-group-item" key={item.id}>
-                            {item.name}
+                            {item.name} - {moment(item.fecha).format('LLL')}
                             <button 
                                 className="btn btn-danger btn-sm float-right"
                                 onClick={() => eliminar(item.id)}
