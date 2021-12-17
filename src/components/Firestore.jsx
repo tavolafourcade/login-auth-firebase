@@ -9,20 +9,33 @@ const Firestore = (props) => {
     const [tarea, setTarea] = React.useState('')
     const [modoEdicion, setModoEdicion] = React.useState(false)
     const [id, setId] = React.useState('')
-
+    const [ultimo, setUltimo] = React.useState(null)
+    const [desactivar, setDesactivar] = React.useState(false)
 
     React.useEffect(() => {
   
         const obtenerDatos = async () => {
   
         try {
+          setDesactivar(true)
             const data = await db.collection(props.user.uid)
             .limit(2)
-            .orderBy('fecha')
+            .orderBy('fecha','desc')
             .get()
           const arrayData = data.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+
+          //Obteniendo el ultimo documento de la lista limitada (en este caso el 1 que está en la 2da posición)
+          setUltimo(data.docs[data.docs.length - 1])
           console.log(arrayData)
           setTareas(arrayData)
+
+          const query = await db.collection(props.user.uid)
+          .limit(2)
+          .orderBy('fecha','desc')
+          .startAfter(data.docs[data.docs.length - 1])
+          .get()
+
+          query.empty ? setDesactivar(true) : setDesactivar(false)
           
         } catch (error) {
           console.log(error)
@@ -103,6 +116,33 @@ const Firestore = (props) => {
       }
     }
 
+    const siguientePag = async (e) => {
+        try {
+          const data = await db.collection(props.user.uid)
+            .limit(2)
+            .orderBy('fecha','desc')
+            .startAfter(ultimo) //Empieza desde la última tarea 
+            .get()
+
+          const arrayData = data.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+          setTareas([
+            ...tareas, ...arrayData
+          ])
+          setUltimo(data.docs[data.docs.length - 1])
+
+          const query = await db.collection(props.user.uid)
+          .limit(2)
+          .orderBy('fecha','desc')
+          .startAfter(data.docs[data.docs.length - 1])
+          .get()
+
+          query.empty ? setDesactivar(true) : setDesactivar(false)
+
+        } catch (error) {
+          console.log(error)
+        }
+    }
+
     return (
         <div>
             <div className="row">
@@ -129,6 +169,11 @@ const Firestore = (props) => {
                         ))
                         }
                     </ul>
+                    <button 
+                        className="btn btn-info btn-block mt-2 btn-sm"
+                        onClick={siguientePag}
+                        disabled={desactivar}
+                        >Siguiente</button>
                 </div>
                 <div className="col-md-6">
                     <h3>
